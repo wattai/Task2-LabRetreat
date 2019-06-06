@@ -6,6 +6,9 @@ using UnityEngine;
 
 public class ObjectController : MonoBehaviour {
 
+    public GameObject WholeBody;
+    
+
     SpriteRenderer MainSpriteRenderer;
     // publicで宣言し、inspectorで設定可能にする
     public Sprite StandbySprite;
@@ -41,6 +44,8 @@ public class ObjectController : MonoBehaviour {
         Sprite[] images = Resources.LoadAll<Sprite>("images/players/");
         this.GetComponent<SpriteRenderer>().sprite = GetAtRandom(images);
 
+        WholeBody = GameObject.Find("HumanBody");
+
         rb = this.GetComponent<Rigidbody2D>();
         ResetPolygonCollider2D();
         position_now = this.transform.position;
@@ -71,18 +76,23 @@ public class ObjectController : MonoBehaviour {
 
     void OnMouseDown() {
         if (!IsThrew) {
-            this.screenPoint = Camera.main.WorldToScreenPoint(transform.position);
-            this.offset = transform.position - Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, screenPoint.z));
+           // this.screenPoint = Camera.main.WorldToScreenPoint(transform.position);
+           // this.offset = transform.position - Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, screenPoint.z));
+
+
+           // transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z);
             IsHold = true;
         }
     }
 
     void OnMouseUp() {
         if (!IsThrew) {
+            InstantiateObject();
             IsHold = false;
         }
     }
 
+    /*
     void OnMouseDrag() {
         if (!IsThrew) {
             Vector3 currentScreenPoint = new Vector3(Input.mousePosition.x, Input.mousePosition.y, screenPoint.z);
@@ -90,6 +100,14 @@ public class ObjectController : MonoBehaviour {
             transform.position = new Vector3(currentPosition.x, transform.position.y, transform.position.z);
         }
     }
+    */
+
+    private void InstantiateObject()
+    {
+        GameObject bunshin = Instantiate(WholeBody) as GameObject;
+        bunshin.name = "bunshin";
+    }
+   
 
     void ResetPolygonCollider2D() {
         //Debug.Log("ResetPolygonCollider2D");
